@@ -89,11 +89,13 @@ constexpr int unchosen = -1;
 void Player::PutCard()
 // Атака
 {
+	if (m_cardscount == 0)
+		Dealer::Attack(Dealer::GetNocard());
 	int index = chooseAttackingCard();
 	Card * chosenCard = m_hand[index];
-	if (m_state.have_to_place_card == false)
+	if (Dealer::GetCurrentHeadTrik() != 0)
 	{
-		if (Dealer::SuitIndex(chosenCard) == m_state.trumpSuit)
+		// if (Dealer::SuitIndex(chosenCard) == m_state.trumpSuit)
 		{
 			chosenCard = Dealer::GetPas();
 			index = unchosen;
@@ -126,9 +128,14 @@ void Player::TakeCards()
 void Player::GetHeadTrick()
 // Защита
 {
+	auto rank = Dealer::RankIndex(Dealer::GetLastCard());
+	if (rank == PAS || rank == NOCARD)
+		return Dealer::Defend(Dealer::GetNocard());
+	if (m_cardscount == 0)
+		return Dealer::Defend(Dealer::GetNocard());
 	int index = chooseDefendingCard();
 	if (index == unchosen) // Если нечем крыть - пасуем
-		Dealer::Defend(Dealer::GetPas());
+		return Dealer::Defend(Dealer::GetPas());
 	// Если есть чем - кроем
 	// Надо убрать карту из руки и сдвинуть карты в руке
 	Card* chosenCard = m_hand[index];
@@ -180,9 +187,15 @@ void Player::ShowCards()
 	for (int i = 0; i < m_cardscount; ++i)
 	{
 		Card * card = m_hand[i];
-		std::wcout << Dealer::RankName(card)[0] << suitsSymb[Dealer::SuitIndex(card)] << ' ';
+		std::cout << Dealer::RankName(card)[0] <<
+#ifdef _WIN32
+		suitsSymb[Dealer::SuitIndex(card)]
+#else
+		Dealer::SuitName(card)[0]
+#endif
+		 << ' ';
 	}
-	std::wcout << std::endl;
+	std::cout << std::endl;
 }
 
 bool Player::INeedCard()

@@ -79,13 +79,13 @@ int main()
 			player2->ShowCards();
 			while (Dealer::NextTrikEnable())
 			{
-				//player1->ShowCards();
-				//player2->ShowCards();
+				player1->ShowCards();
+				player2->ShowCards();
 
 				player1->PutCard();
-				//Dealer::ShowTable();
+				Dealer::ShowTable();
 				player2->GetHeadTrick();
-				//Dealer::ShowTable();
+				Dealer::ShowTable();
 			}
 			Dealer::ShowTable();
 			int kht = Dealer::GetCurrentHeadTrik();

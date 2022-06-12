@@ -9,15 +9,19 @@ find_library(DEALER_LIBRARY
 	NO_DEFAULT_PATH
 )
 
+
 set(SOURCES
 	main.cpp
-	player.cpp)
+	player.cpp
+	#dealer.cpp
+)
 
-set(CMAKE_CXX_FLAGS_DEBUG -g)
+set(CMAKE_CXX_FLAGS_Debug -g)
 
 
 if (UNIX) 
 	set(LINKER_FLAGS "-no-pie")
+	message(WARNING "Using durak with this libdurak is dangerous for your terminal. Please pipe output into | cat -v")
 endif(UNIX)
 
 if (WIN32)
