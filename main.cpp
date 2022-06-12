@@ -1,7 +1,7 @@
 #include "dealer.h"
 #include "player.h"
 #ifdef _WIN32
-//#include <vld.h> 
+#include <vld.h> 
 #endif
 
 #include <iostream>
@@ -154,6 +154,8 @@ int main()
 		player2->ShowCards();
 
 		*/
+		delete Dealer::GetPas();
+		delete Dealer::GetNocard();
 		std::cout << "\nKonstantin - " << p1win << " Grigory - " << p2win << " drawn " << drawn ;
 	}
 
