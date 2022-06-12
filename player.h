@@ -27,9 +27,45 @@ public:
 	virtual int GetCardNum() = 0;
 };
 
+struct GameState
+{
+	bool my_turn;
+	bool have_to_place_card;
+	int trumpSuit;
+};
+
+constexpr int deckSize = 52;
+
 class Player : public PlayerAbstract
 {
 // Реализуйте интерфейсы абстрактного класса 
 // Доступные методы из класса Dealer можно увидеть в файле dealer.h
+public:
+	
+	Player(const char* name);
+	~Player() = default;
+
+	void YouTurn(bool flag) final;
+	void PutCard() final;
+	void TakeCards() final;
+	void GetHeadTrick() final;
+	void TakeOneCard(Card * &nc) final;
+	void ShowCards() final;
+	bool INeedCard() final;
+	int GetCardNum() final;
+
+private:
+
+	void normalizeHand();
+	bool less(Card* first, Card* secnd) const;
+	int chooseAttackingCard() const;
+	bool canDefend(Card* first, Card* secnd) const;
+	int chooseDefendingCard() const;
+	const char* m_name;
+	Card* m_hand[deckSize];
+	int m_cardscount = 0;
+	GameState m_state;
+	
 };
 
+using Player0408 = Player;

@@ -120,6 +120,7 @@ int main()
 			else
 			{
 				std::cout << "error";
+				return 1;
 			}
 		}
 
@@ -148,15 +149,16 @@ int main()
 			
 		// если последняя катра - пас - второй забирает
 
+		/*
 		player1->ShowCards();
 		player2->ShowCards();
 
+		*/
 		std::cout << "\nKonstantin - " << p1win << " Grigory - " << p2win << " drawn " << drawn ;
 	}
 
 
 
 
-	
 	return 0;
 }

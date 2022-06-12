@@ -4,4 +4,7 @@
 *.toc
 *.out
 .~lock*
-.vscode
+.vscode/
+/build/
+/build/**
+core
