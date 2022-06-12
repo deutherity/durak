@@ -1,4 +1,3 @@
-#include <asm-generic/errno.h>
 #include <iostream>
 #include "dealer.h"
 #include "player.h"
@@ -111,7 +110,7 @@ void Player::PutCard()
 
 void Player::TakeCards()
 {
-	auto table = Dealer::GetheadTrick();
+	const auto table = Dealer::GetheadTrick();
 	int end = Dealer::GetCurrentHeadTrik();
 	for (int i = 0; i < end; ++i)
 		for (int j = 0; j < 2; ++j)
