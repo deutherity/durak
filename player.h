@@ -29,8 +29,7 @@ public:
 
 struct GameState
 {
-	bool my_turn;
-	bool have_to_place_card;
+	// Козырь в текущей игре
 	int trumpSuit;
 };
 
@@ -45,6 +44,7 @@ public:
 	Player(const char* name);
 	~Player() = default;
 
+	// см. выше
 	void YouTurn(bool flag) final;
 	void PutCard() final;
 	void TakeCards() final;
@@ -56,14 +56,26 @@ public:
 
 private:
 
+	// Сдвигает указатели в руке влево до упора.
 	void normalizeHand();
+	// Проверяет, имеет ли первая карта меньший ранг, или уступает по козырности
 	bool less(Card* first, Card* secnd) const;
-	int chooseAttackingCard() const;
+	// Проверяет, можно ли первой картой побить вторую.
 	bool canDefend(Card* first, Card* secnd) const;
+	// Достаёт карту из руки
+	Card * popCard(int index);
+	// Выбор атакующей карты
+	int chooseAttackingCard() const;
+	// Выбор защищающей карты
 	int chooseDefendingCard() const;
+
+	// Имя игрока
 	const char* m_name;
+	// Рука с картами
 	Card* m_hand[deckSize];
+	// Количество карт в руке.
 	int m_cardscount = 0;
+	// Состояние игры
 	GameState m_state;
 	
 };

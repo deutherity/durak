@@ -60,12 +60,7 @@ void Player::normalizeHand()
 		m_hand[j] = nullptr;
 }
 
-void Player::YouTurn(bool flag)
-{
-	m_state.my_turn = true;
-	if (flag)
-		m_state.have_to_place_card = true;
-}
+void Player::YouTurn(bool flag) {}
 
 int Player::chooseAttackingCard() const
 // Найти индекс карты, которой хочется сходить
@@ -101,13 +96,19 @@ void Player::PutCard()
 			index = unchosen;
 		}
 	}
-	if (index != unchosen) // Значит надо убрать карту из руки и сдвинуть карты в руке влево
-	{
-		m_hand[index] = nullptr;
-		normalizeHand();
-		m_state.have_to_place_card = false;
-	}
+	if (index != unchosen)
+	// Значит надо убрать карту из руки и сдвинуть карты в руке влево
+		popCard(index);
 	Dealer::Attack(chosenCard);
+}
+
+Card * Player::popCard(int index)
+{
+	// m_cardscount -= 1;
+	Card* card = m_hand[index];
+	m_hand[index] = nullptr;
+	normalizeHand();
+	return card;
 }
 
 void Player::TakeCards()
@@ -121,7 +122,7 @@ void Player::TakeCards()
 			if (card != nullptr &&
 				Dealer::RankIndex(card) != PAS &&
 				Dealer::RankIndex(card) != NOCARD)
-				m_hand[m_cardscount++] = table[j][i];
+				TakeOneCard(table[j][i]);
 		}
 }
 
@@ -138,10 +139,7 @@ void Player::GetHeadTrick()
 		return Dealer::Defend(Dealer::GetPas());
 	// Если есть чем - кроем
 	// Надо убрать карту из руки и сдвинуть карты в руке
-	Card* chosenCard = m_hand[index];
-	m_hand[index] = nullptr;
-	normalizeHand();
-	Dealer::Defend(chosenCard);
+	Dealer::Defend(popCard(index));
 }
 
 bool Player::canDefend(Card* first, Card* secnd) const
@@ -154,23 +152,29 @@ bool Player::canDefend(Card* first, Card* secnd) const
 
 int Player::chooseDefendingCard() const 
 {
-	Card *attackingCard = Dealer::GetLastCard(); // Карта, которую нужно покрыть
-	bool use_trump = Dealer::getcurrentCard() == deckSize; // если конец игры, то используй козыри
-	int minimal_index = unchosen; // Индекс карты, которой мы хотим покрыть
+	Card *attackingCard = Dealer::GetLastCard();
+	// Карта, которую нужно покрыть
+	bool use_trump = Dealer::getcurrentCard() == deckSize; 
+	// если конец игры, то используй козыри
+	int minimal_index = unchosen;
+	// Индекс карты, которой мы хотим покрыть
 	
 	for (int i = 0; i < m_cardscount; ++i)
 	{
 		Card* card = m_hand[i];
 		bool is_trump_card = Dealer::SuitIndex(card) == m_state.trumpSuit;
 		if (canDefend(card, attackingCard) &&
-			(!is_trump_card || use_trump)) // Если такой картой можно защититься
-										   // и если это не козырь или мы можем использовать козыри
+			(!is_trump_card || use_trump))
+			// Если такой картой можно защититься
+			// и если это не козырь или мы можем использовать козыри
 		{
-			if (minimal_index == unchosen) // Если ещё не выбрали карту
+			if (minimal_index == unchosen) 
+			// Если ещё не выбрали карту
 				minimal_index = i;
-			else if (less(card, m_hand[minimal_index])) // или нашли карту поменьше
+			else if (less(card, m_hand[minimal_index]))
+			// или нашли карту поменьше
 				minimal_index = i;
-			// то выбираем эту карту
+				// то выбираем эту карту
 		}
 	}
 	return minimal_index;
